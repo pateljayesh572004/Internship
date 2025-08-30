@@ -1,0 +1,78 @@
+Codsoft Internship - Data Science
+Task 1: Titanic Survival Prediction
+
+---------------------------------------------
+Step 1: Import Libraries
+---------------------------------------------
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+---------------------------------------------
+Step 2: Load Dataset
+---------------------------------------------
+# Titanic dataset (download from Kaggle or seaborn has built-in Titanic dataset)
+titanic = sns.load_dataset('titanic')
+
+print(titanic.head())
+print(titanic.info())
+
+---------------------------------------------
+Step 3: Data Preprocessing
+---------------------------------------------
+# Drop unnecessary columns
+titanic = titanic.drop(['deck', 'embark_town', 'alive', 'class', 'who', 'adult_male'], axis=1)
+
+# Fill missing values
+titanic['age'] = titanic['age'].fillna(titanic['age'].median())
+titanic['embarked'] = titanic['embarked'].fillna(titanic['embarked'].mode()[0])
+
+# Encode categorical variables
+le = LabelEncoder()
+for col in ['sex','embarked','alone']:
+    titanic[col] = le.fit_transform(titanic[col])
+
+print(titanic.head())
+
+---------------------------------------------
+Step 4: Feature Selection
+---------------------------------------------
+X = titanic.drop('survived', axis=1)
+y = titanic['survived']
+
+---------------------------------------------
+Step 5: Split Data
+---------------------------------------------
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+---------------------------------------------
+Step 6: Model Training
+---------------------------------------------
+model = LogisticRegression(max_iter=200)
+model.fit(X_train, y_train)
+
+---------------------------------------------
+Step 7: Prediction & Evaluation
+---------------------------------------------
+y_pred = model.predict(X_test)
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+print("Classification Report:\n", classification_report(y_test, y_pred))
+
+---------------------------------------------
+Step 8: Results
+---------------------------------------------
+# The logistic regression model predicts Titanic survival with reasonable accuracy.
+# You can improve performance using other models like RandomForestClassifier or XGBoost.
+
+---------------------------------------------
+Conclusion:
+---------------------------------------------
+We successfully built a machine learning model to predict survival on the Titanic dataset.
+This completes Codsoft Data Science Task 1.
